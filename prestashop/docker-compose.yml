@@ -4,19 +4,19 @@ services:
   prestashop:
     image: citrustiara/presta-be-194660:latest
     ports:
-      - [cite_start]"19466:80" 
+      - "19466:80" 
     deploy:
       resources:
         limits:
           cpus: '0.50'
           memory: 512M
     environment:
-      - [cite_start]DB_SERVER=10.40.71.115  # [Wymóg] Wspólny serwer MySQL klastra [cite: 20]
-      - [cite_start]DB_NAME=BE_194660       # [Wymóg] Nazwa Twojej bazy (zgodna z prefixem) [cite: 118, 124]
-      - [cite_start]DB_USER=root            # Użytkownik bazy na klastrze [cite: 122]
-      - [cite_start]DB_PASSWD=student       # Hasło bazy na klastrze [cite: 121, 122]
-      - PS_DOMAIN=172.20.83.101:19466 # Adres widoczny przez tunel SSH
-      - PS_ENABLE_SSL=0         # Zalecane wyłączenie SSL wewnątrz klastra na start
+      - DB_SERVER=10.40.71.115
+      - DB_NAME=BE_194660
+      - DB_USER=root
+      - DB_PASSWD=student
+      - PS_DOMAIN=172.20.83.101:19466
+      - PS_ENABLE_SSL=0
     networks:
       - cluster_network
 
