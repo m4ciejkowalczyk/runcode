@@ -2,10 +2,10 @@ FROM prestashop/prestashop:1.7.8
 
 # Kopiowanie źródeł
 COPY ./src /var/www/html
-
+RUN rm -rf /var/www/html/install
 RUN chown -R www-data:www-data /var/www/html
 
-# Reszta Twoich komend (SSL itp.)
+
 RUN apt-get update && apt-get install -y openssl \
     && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/ssl/private/ssl-cert-snakeoil.key \
