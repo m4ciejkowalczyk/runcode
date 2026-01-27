@@ -1,57 +1,25 @@
+version: '3.8'
+
 services:
-  db:
-    container_name: some-mysql
-    image: mysql:5.7
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: prestashop
-      MYSQL_USER: presta
-      MYSQL_PASSWORD: presta
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./db.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - prestashop_network
-
   prestashop:
-    container_name: prestashop
-    #image: prestashop/prestashop:1.7.8
-    build: .
-    restart: unless-stopped
-    depends_on:
-      - db
+    image: citrustiara/presta-be-194660:latest
     ports:
-      - "80:80"
-      - "443:443"
+      - "19466:80" 
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
     environment:
-      DB_SERVER: some-mysql
-      DB_NAME: prestashop
-      DB_USER: presta
-      DB_PASSWD: presta
-      PS_LANGUAGE: ${PS_LANGUAGE:-pl}
-      PS_COUNTRY: ${PS_COUNTRY:-pl}
-      PS_FOLDER_ADMIN: admin-dev
-      #PS_FOLDER_INSTALL: install-dev
-      #PS_INSTALL_AUTO: 1 
-      PS_DOMAIN: localhost
-      PS_ENABLE_SSL: 1
-    volumes:
-      - ./src:/var/www/html
+      - DB_SERVER=10.40.71.115
+      - DB_NAME=BE_194660
+      - DB_USER=root
+      - DB_PASSWD=student
+      - PS_DOMAIN=172.20.83.101:19466
+      - PS_ENABLE_SSL=0
     networks:
-      - prestashop_network
-
-  mailhog:
-    image: mailhog/mailhog
-    container_name: projekt_mailhog
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-    networks:
-      - prestashop_network
-
-volumes:
-  db_data:
+      - cluster_network
 
 networks:
-  prestashop_network:
+  cluster_network:
+    driver: overlay

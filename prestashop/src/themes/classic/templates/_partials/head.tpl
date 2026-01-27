@@ -89,3 +89,59 @@
 {/block}
 
 {block name='hook_extra'}{/block}
+
+{literal}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  // 1. Sprawdzamy przycisk
+  var registerButton = document.querySelector('button[data-link-action="save-customer"]');
+
+  if (registerButton) {
+    registerButton.addEventListener('click', function() {
+      sessionStorage.setItem('registration_in_progress', 'true');
+    });
+  }
+
+  // 2. Sprawdzamy stan po przeładowaniu
+  var logoutLink = document.querySelector('a.logout, a[href*="mylogout"], .logout');
+  var isRegistrationPending = sessionStorage.getItem('registration_in_progress');
+  
+
+  // 3. Główny warunek
+  if (logoutLink && isRegistrationPending === 'true') {
+      console.log("Próba wysłania zdarzenia...");
+      
+      if (typeof gtag === 'function') {
+          gtag('event', 'page_view', {
+            'page_title': 'Sukces Rejestracji',
+            'page_location': 'http://localhost/rejestracja-fin'
+          });
+          console.log("Event wysłany do GA.");
+      }
+      // Czyścimy flagę
+      sessionStorage.removeItem('registration_in_progress');
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  var bannerLinks = document.querySelectorAll('#carousel a');
+
+  if(bannerLinks.length > 0){
+    bannerLinks.forEach(function(link) {
+      link.addEventListener('click', function() { 
+        if (typeof gtag === 'function') {
+          gtag('event', 'banner_click', {
+            'event_category': 'baner',
+            'event_label': 'okazje',
+          });
+          console.log('Kliknięcie w baner wysłane do GA');
+        }
+      });
+    });
+  }
+});
+</script>
+{/literal}
